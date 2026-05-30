@@ -29,7 +29,7 @@ export default function Locais({ places, onSave, onDelete }) {
       </form>
       <div className="card-grid">
         {places.length ? places.map((place) => (
-          <article className="data-card" key={place.id}>
+          <article className="data-card" key={place.id} data-tilt>
             <header>
               <div>
                 <span>{place.type}</span>

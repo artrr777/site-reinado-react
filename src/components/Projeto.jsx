@@ -18,7 +18,7 @@ export default function Projeto() {
       </div>
       <div className="process-grid">
         {items.map(([title, text]) => (
-          <article key={title}>
+          <article key={title} data-tilt>
             <strong>{title}</strong>
             <p>{text}</p>
           </article>

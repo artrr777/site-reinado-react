@@ -42,7 +42,7 @@ export default function Edicoes({ editions, onSave, onDelete }) {
       </form>
       <div className="card-grid">
         {editions.length ? editions.map((edition) => (
-          <article className="data-card" key={edition.id}>
+          <article className="data-card" key={edition.id} data-tilt>
             <header>
               <div>
                 <span>{formatDate(edition.startDate)} a {formatDate(edition.endDate)}</span>

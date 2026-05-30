@@ -21,7 +21,7 @@ export default function Dashboard({ data, quickResults }) {
           </div>
           <div className="timeline">
             {featured?.schedule?.length ? featured.schedule.map((item) => (
-              <article key={`${item.date}-${item.time}-${item.name}`}>
+              <article key={`${item.date}-${item.time}-${item.name}`} data-tilt>
                 <div>
                   <strong>{item.time}</strong>
                   <span>{formatDate(item.date)}</span>
@@ -43,7 +43,7 @@ export default function Dashboard({ data, quickResults }) {
           </div>
           <div className="compact-list">
             {quickResults.length ? quickResults.map((item) => (
-              <article key={`${item.type}-${item.title}`}>
+              <article key={`${item.type}-${item.title}`} data-tilt>
                 <span>{item.type}</span>
                 <strong>{item.title}</strong>
                 <span>{item.detail}</span>
@@ -58,7 +58,7 @@ export default function Dashboard({ data, quickResults }) {
 
 function Metric({ label, value }) {
   return (
-    <article>
+    <article data-tilt>
       <span>{label}</span>
       <strong>{value}</strong>
     </article>

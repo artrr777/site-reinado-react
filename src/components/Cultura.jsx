@@ -33,7 +33,7 @@ export default function Cultura({ records, onSave, onDelete }) {
       </form>
       <div className="card-grid">
         {records.length ? records.map((record) => (
-          <article className="data-card" key={record.id}>
+          <article className="data-card" key={record.id} data-tilt>
             <header>
               <div>
                 <span>{record.category}</span>

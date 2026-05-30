@@ -14,6 +14,14 @@ export default function Header({ activeView, onViewChange }) {
       <div className="hero-media">
         <img src="./reinado-colonia-santa-isabel.jpg" alt="Guarda de Congado durante celebracao do Reinado de Nossa Senhora do Rosario" />
       </div>
+      <div className="rhythm-field" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
       <nav className="topbar" aria-label="Navegacao principal">
         <strong>Reinado Santa Isabel</strong>
         <div className="nav-actions">
@@ -35,7 +43,7 @@ export default function Header({ activeView, onViewChange }) {
           <h1>Memoria viva do Reinado de Nossa Senhora do Rosario da Colonia Santa Isabel</h1>
           <p>Sistema comunitario para registrar edicoes, participantes, locais, informacoes culturais e proximas celebracoes da festa.</p>
         </div>
-        <div className="hero-panel" aria-label="Resumo da festa">
+        <div className="hero-panel" aria-label="Resumo da festa" data-tilt>
           <span>Festa tradicional</span>
           <strong>Primeiro domingo de maio</strong>
           <small>Colonia Santa Isabel, Betim-MG</small>

@@ -49,6 +49,47 @@ export default function App() {
     document.body.classList.toggle("font-large", accessibility.fontLarge);
   }, [accessibility]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    const updatePointer = (event) => {
+      root.style.setProperty("--pointer-x", `${event.clientX}px`);
+      root.style.setProperty("--pointer-y", `${event.clientY}px`);
+    };
+
+    window.addEventListener("pointermove", updatePointer);
+    return () => window.removeEventListener("pointermove", updatePointer);
+  }, []);
+
+  useEffect(() => {
+    const cards = [...document.querySelectorAll("[data-tilt]")];
+    const cleanups = cards.map((card) => {
+      const move = (event) => {
+        const rect = card.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width;
+        const y = (event.clientY - rect.top) / rect.height;
+        card.style.setProperty("--tilt-y", `${(x - 0.5) * 12}deg`);
+        card.style.setProperty("--tilt-x", `${(0.5 - y) * 12}deg`);
+        card.style.setProperty("--shine-x", `${x * 100}%`);
+        card.style.setProperty("--shine-y", `${y * 100}%`);
+      };
+      const leave = () => {
+        card.style.setProperty("--tilt-y", "0deg");
+        card.style.setProperty("--tilt-x", "0deg");
+        card.style.setProperty("--shine-x", "50%");
+        card.style.setProperty("--shine-y", "0%");
+      };
+
+      card.addEventListener("pointermove", move);
+      card.addEventListener("pointerleave", leave);
+      return () => {
+        card.removeEventListener("pointermove", move);
+        card.removeEventListener("pointerleave", leave);
+      };
+    });
+
+    return () => cleanups.forEach((cleanup) => cleanup());
+  });
+
   const years = useMemo(
     () => [...new Set(data.editions.map((edition) => edition.year))].sort((a, b) => b - a),
     [data.editions]
@@ -149,13 +190,15 @@ export default function App() {
           onExport={exportData}
           onReset={resetData}
         />
-        {activeView === "dashboard" && <Dashboard data={data} quickResults={quickResults} />}
-        {activeView === "festividade" && <Festividade />}
-        {activeView === "edicoes" && <Edicoes editions={filtered.editions} onSave={(record) => upsert("editions", record, "edition")} onDelete={(id) => remove("editions", id)} />}
-        {activeView === "participantes" && <Participantes participants={filtered.participants} years={years} onSave={(record) => upsert("participants", record, "participant")} onDelete={(id) => remove("participants", id)} />}
-        {activeView === "locais" && <Locais places={filtered.places} onSave={(record) => upsert("places", record, "place")} onDelete={(id) => remove("places", id)} />}
-        {activeView === "cultura" && <Cultura records={filtered.culture} onSave={(record) => upsert("culture", record, "culture")} onDelete={(id) => remove("culture", id)} />}
-        {activeView === "processo" && <Projeto />}
+        <div className="view-shell" key={activeView}>
+          {activeView === "dashboard" && <Dashboard data={data} quickResults={quickResults} />}
+          {activeView === "festividade" && <Festividade />}
+          {activeView === "edicoes" && <Edicoes editions={filtered.editions} onSave={(record) => upsert("editions", record, "edition")} onDelete={(id) => remove("editions", id)} />}
+          {activeView === "participantes" && <Participantes participants={filtered.participants} years={years} onSave={(record) => upsert("participants", record, "participant")} onDelete={(id) => remove("participants", id)} />}
+          {activeView === "locais" && <Locais places={filtered.places} onSave={(record) => upsert("places", record, "place")} onDelete={(id) => remove("places", id)} />}
+          {activeView === "cultura" && <Cultura records={filtered.culture} onSave={(record) => upsert("culture", record, "culture")} onDelete={(id) => remove("culture", id)} />}
+          {activeView === "processo" && <Projeto />}
+        </div>
       </main>
       <footer>
         <p>
