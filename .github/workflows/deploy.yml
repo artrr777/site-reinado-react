@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   build:
+    if: ${{ !contains(github.event.head_commit.message, '[skip deploy]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,21 +30,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Restore Vite entry
+        run: cp index.source.html index.html
+
       - name: Build
         run: npm run build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: dist
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+      - name: Publish build to main root
+        run: |
+          rm -rf assets
+          cp -R dist/* .
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html assets reinado-colonia-santa-isabel.jpg
+          if git diff --cached --quiet; then
+            echo "No build changes to publish"
+          else
+            git commit -m "Publica build do React [skip deploy]"
+            git push
+          fi
